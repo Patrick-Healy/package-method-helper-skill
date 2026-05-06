@@ -1,0 +1,60 @@
+{
+  "language": "{lang}",
+  "package": "{package}",
+  "canonical_name": "{package}",
+  "canonical_package_name": "{package}",
+  "aliases": ["{package}"],
+  "upload_tier": "supplementary_context",
+  "retrieval_priority": "supporting_methods",
+  "selection_basis": "gap_fill_agent",
+  "selection_score": "0.0",
+  "source": {
+    "primary_doc_source_type": "{official_docs|help_file|pypi_readme}",
+    "primary_doc_url": "{url}",
+    "open_doc_url": "{url}",
+    "repository_url": "{repo_url_or_empty}",
+    "raw_doc_source_url": "{url}"
+  },
+  "version": {
+    "upstream_version": "{version}",
+    "observed_corpus_version": "",
+    "upstream_release_date": "{YYYY-MM-DD}",
+    "maintenance_status": "{active_recent_release|active_older_release|review_older_release|possibly_unmaintained}"
+  },
+  "content_presence": {
+    "raw_doc": true,
+    "raw_meta": true,
+    "documentation_chunks": true,
+    "overview_card": true,
+    "summary_card": true,
+    "decision_card": true,
+    "pattern_card": false,
+    "function_card_count": 0,
+    "function_documentation_count": 0,
+    "paper_card_count": 0
+  },
+  "status": {
+    "completeness": "gap_fill_draft",
+    "confidence_for_codegen": "{high|medium|low}",
+    "has_function_layer": true,
+    "has_paper_layer": false
+  },
+  "rag_agent": {
+    "role_class": "{role_class}",
+    "agent_safety_class": "{safe_default|safe_with_context|expert_only}",
+    "task_tags": [],
+    "choose_when": [],
+    "avoid_when": [],
+    "not_for": [],
+    "common_pairings": [],
+    "example_queries": [],
+    "selection_priority": "specialized",
+    "retrieval_priority": "medium",
+    "doc_style": "{help_file|vignette|mixed|api_reference}",
+    "workflow_position": [],
+    "decision_traps": [],
+    "neighbor_packages": [],
+    "query_aliases": [],
+    "top_functions_or_commands": []
+  }
+}

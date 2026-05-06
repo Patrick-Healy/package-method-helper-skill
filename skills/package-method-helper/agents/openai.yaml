@@ -1,0 +1,4 @@
+interface:
+  display_name: "Package Method Helper"
+  short_description: "R, Python, and Stata package guidance from a DuckDB-backed verified corpus"
+  default_prompt: "Use the package-method-helper skill to search the verified package corpus, surface source-labeled guidance, and help write or annotate empirical code in R, Python, or Stata."

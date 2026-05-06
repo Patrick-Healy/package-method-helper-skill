@@ -1,0 +1,45 @@
+{
+  "package": "{package}",
+  "language": "{Language}",
+  "source_url": "{url}",
+  "content_type": "text/html",
+  "downloaded_utc": "{ISO_8601_timestamp}",
+  "code_block_count": 0,
+  "markdown_chars": 0,
+  "canonical_package_name": "{package}",
+  "sidecar_enrichment_version": "1.0",
+  "metadata_enriched_utc": "{ISO_8601_timestamp}",
+  "version_metadata": {
+    "observed_corpus": {
+      "records_with_exact_version": 0,
+      "distinct_exact_versions": 0,
+      "top_exact_version": "",
+      "top_exact_version_count": 0,
+      "top_exact_versions": [],
+      "version_source_counts": {}
+    },
+    "upstream": {
+      "version_source_type": "{cran_description|pypi|ssc}",
+      "version_source_url": "{registry_url}",
+      "docs_version_detected": "{version}",
+      "metadata_fetch_status": "ok",
+      "latest_upstream_version": "{version}",
+      "latest_upstream_release_date": "{YYYY-MM-DD}",
+      "maintainer": "{name_email}",
+      "title": "{title}",
+      "package_homepage": "{url}",
+      "bug_reports_url": "{url}"
+    },
+    "observed_vs_upstream": "not_applicable_gap_fill"
+  },
+  "maintenance": {
+    "checked_utc": "{ISO_8601_timestamp}",
+    "status": "{maintenance_status}",
+    "status_reason": "{reason}",
+    "release_age_days": null,
+    "release_freshness_bucket": "unknown",
+    "known_issue_flags": [],
+    "known_issue_notes": []
+  },
+  "metadata_source_urls": []
+}

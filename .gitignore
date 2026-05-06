@@ -1,0 +1,30 @@
+# OS / editor
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+.python-version
+
+# Local config and secrets
+.env
+.env.*
+!.env.example
+
+# Generated local outputs
+work/generated/
+outputs/
+*.duckdb
+*.wal
+*.tmp
+*.log
+*.jsonl
+*.parquet
+
+# Keep only the contract file in precomputed embeddings
+skills/package-method-helper/assets/precomputed_embeddings/*
+!skills/package-method-helper/assets/precomputed_embeddings/README.md
