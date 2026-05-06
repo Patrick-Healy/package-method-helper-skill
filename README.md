@@ -58,6 +58,30 @@ python3 skills/package-method-helper/scripts/build_package_method_helper_duckdb.
   --output-db work/generated/duckdb/package_method_helper.duckdb
 ```
 
+## Build all bundles at once
+
+This creates:
+- one DuckDB index
+- one safe chunk bundle for `all`
+- one safe chunk bundle each for `r`, `python`, and `stata`
+- optional embeddings for all four bundles
+
+```bash
+python3 skills/package-method-helper/scripts/build_all_bundles.py \
+  --collection-root /path/to/package_methods_top50_language_upload_tasks \
+  --comparisons-root /path/to/package_methods_top50_sync_safe/00_comparisons
+```
+
+With embeddings:
+
+```bash
+python3 skills/package-method-helper/scripts/build_all_bundles.py \
+  --collection-root /path/to/package_methods_top50_language_upload_tasks \
+  --comparisons-root /path/to/package_methods_top50_sync_safe/00_comparisons \
+  --embed \
+  --model text-embedding-3-small
+```
+
 ## Query the local corpus
 
 ```bash
@@ -104,6 +128,14 @@ python3 skills/package-method-helper/scripts/embed_chunks_openai.py \
 ```
 
 The script reads `OPENAI_API_KEY` from the environment first, then from `.env` if present.
+
+## Run smoke tests
+
+```bash
+python3 tests/run_smoke_tests.py \
+  --db work/generated/duckdb/package_method_helper.duckdb \
+  --bundles-root work/generated/bundles
+```
 
 ## Precomputed embeddings
 

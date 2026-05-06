@@ -51,6 +51,36 @@ def scrub_text(text: str) -> str:
     return text.strip()
 
 
+def embedding_text_for_row(row: dict[str, Any]) -> str:
+    body = row.get("body_text") or ""
+    full = row.get("full_text") or ""
+    doc_type = str(row.get("doc_type") or "")
+    chunk_type = str(row.get("chunk_type") or "")
+
+    text = body or full
+
+    # Function cards in this corpus often append a full help page after a divider.
+    # For embeddings, the concise pre-divider guidance is the higher-signal text.
+    if doc_type == "function_card" and "\n---\n" in text:
+        text = text.split("\n---\n", 1)[0].strip()
+
+    # Function documentation can still be long because some packages expose
+    # very large help pages as single entry-point docs. Keep the high-signal
+    # front section and bound the payload for embeddings.
+    if doc_type == "function_documentation" and len(text) > 12000:
+        text = text[:12000]
+
+    # Comparison cards can be verbose. Keep them compact and deterministic.
+    if doc_type == "comparison_card":
+        text = text[:8000]
+
+    # Fallback guard for any unusually large item that still passed export filters.
+    if len(text) > 14000:
+        text = text[:14000]
+
+    return scrub_text(text)
+
+
 def load_json_field(value: Any) -> list[str]:
     if value in (None, ""):
         return []
@@ -92,7 +122,7 @@ def main() -> int:
 
     records = []
     for row in rows:
-        text = scrub_text(row.get("body_text") or row.get("full_text") or "")
+        text = embedding_text_for_row(row)
         if not text:
             continue
         record = {
@@ -112,7 +142,6 @@ def main() -> int:
             "role_class": row.get("role_class") or "",
             "agent_safety_class": row.get("agent_safety_class") or "",
             "source_kind": row.get("source_kind") or "",
-            "source_path": row.get("path") or "",
             "text": text,
             "text_sha256": text_digest(text),
         }
