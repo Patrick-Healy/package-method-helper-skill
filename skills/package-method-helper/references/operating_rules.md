@@ -20,11 +20,16 @@ If still ambiguous, ask the user before searching.
 ## Search Gates
 
 1. Route to one language first.
+1a. Do not do cross-language similarity search unless the user explicitly asks for it.
 2. For multi-package workflows, search packages separately and state the workflow order.
 3. Require a literal package name or primary-function hit before trusting retrieval.
 4. Prefer summary, decision, and function layers before general documentation.
 5. If the local index misses, use direct file fallback under the collection root.
 6. Only then use web fallback.
+7. For an add-to-collection path, run the official-doc acquisition workflow before building cards or chunks.
+8. For a paper layer, acquire the paper landing page first; do not synthesize paper cards from memory.
+9. Before modifying a collection, create a reviewable ingest plan.
+10. Only apply collection changes after explicit approval and then rebuild the local index if the new material should be searchable immediately.
 
 ## Write Mode
 

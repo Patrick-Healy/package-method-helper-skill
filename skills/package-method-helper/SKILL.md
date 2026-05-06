@@ -9,16 +9,27 @@ Help empirical researchers write and annotate analysis code in R, Python, and St
 
 Read only what you need:
 - `references/duckdb_usage.md` for build, query, and embedding-export commands.
+  - This now also covers the prebuilt Dropbox DuckDB download path.
+  - It also covers the maintainer workflow for publishing a prebuilt bundle.
 - `references/operating_rules.md` for language routing, search gates, source labels, and write-vs-annotate behavior.
 - `references/collection_inventory.md` when you need to know what the bundled corpus contains.
 - `references/embedding_setup.md` when preparing safe chunk exports for GPT embeddings or consuming precomputed embeddings.
+- `references/doc_acquisition_workflow.md` when you need to fetch official CRAN, PyPI, or SSC docs for a new package before chunking or ingest.
+- `references/paper_acquisition_workflow.md` when you need the methods-paper source layer for a package.
 - `references/gap_fill_workflow.md` when a package is missing and you need to generate a collection-ready bundle.
+- `references/ingest_workflow.md` when you need to review and apply a package or paper-layer ingest into an existing collection.
 
 ## Tool Contract
 
 - Prefer the local DuckDB index over ad hoc grep or web search.
 - If the DuckDB database does not exist, build it first with `scripts/build_package_method_helper_duckdb.py`.
 - Query the index with `scripts/query_package_method_helper_duckdb.py`.
+- For a missing package, fetch official source docs first with `scripts/acquire_official_package_docs.py` before writing any gap-fill bundle.
+- If the package should have a methods-paper layer, fetch the paper source with `scripts/acquire_methods_paper.py` before generating `paper_note`, `bridge`, or `equation` cards.
+- Generate paper-layer cards from the acquired paper source with `scripts/generate_paper_layer_from_source.py`.
+- Before modifying a collection, create an approval plan with `scripts/plan_collection_ingest.py`.
+- Apply collection changes with `scripts/ingest_collection_bundle.py` only after the approval plan has been reviewed.
+- Treat language as a hard gate. Search one language at a time unless the user explicitly asks for cross-language similarity search.
 - When retrieval is ambiguous, require a literal package or primary-function hit before trusting results.
 - Use direct file fallback inside the collection root before going to the web.
 - Keep source confidence explicit:
@@ -44,15 +55,21 @@ If the user's corpus lives elsewhere, pass explicit paths to the build script an
 1. Detect mode: `WRITE` when the user describes what to build; `ANNOTATE` when code is already present.
 2. Detect language before searching. If ambiguous, ask.
 3. Build or open the DuckDB index.
-4. Search the relevant language first, then the package, then the function or task.
+4. Search the relevant language first, then the package, then the function or task. If the language is not explicit, infer it from the package name or syntax cues; if still ambiguous, ask rather than searching across languages.
 5. Prefer this evidence order when available:
    - summary card
    - decision card
    - function card or function documentation
    - documentation chunks
    - raw docs
-6. For multi-package workflows, search each package separately and state the workflow order.
-7. If the package is missing from the corpus, use the gap-fill workflow and keep any non-collection answer explicitly labeled.
+6. After the first exact package hit, read the follow-up context as well:
+   - package manifest metadata
+   - source/version/status sidecars
+   - core cards
+   - function edges
+   - adjacent package edges in the same language
+7. For multi-package workflows, search each package separately and state the workflow order.
+8. If the package is missing from the corpus, use the gap-fill workflow and keep any non-collection answer explicitly labeled.
 
 ## Output Rules
 

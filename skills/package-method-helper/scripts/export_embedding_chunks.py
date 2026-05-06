@@ -14,6 +14,7 @@ import duckdb
 ABSOLUTE_PATH_RE = re.compile(r"/Users/[^\s)]+")
 PATH_HEADER_RE = re.compile(r"^\[[A-Z0-9_]*PATH\]\s+.*$", re.MULTILINE)
 WHITESPACE_RE = re.compile(r"\s+")
+EMBEDDING_LANGUAGES = ["r", "python", "stata"]
 
 
 def parse_args() -> argparse.Namespace:
@@ -25,7 +26,7 @@ def parse_args() -> argparse.Namespace:
         default=repo_root / "work/generated/duckdb/package_method_helper.duckdb",
         help="DuckDB file created by the build script.",
     )
-    parser.add_argument("--language", choices=["r", "python", "stata", "shared"], help="Restrict export to one language.")
+    parser.add_argument("--language", choices=EMBEDDING_LANGUAGES, required=True, help="Export one language at a time.")
     parser.add_argument(
         "--output-jsonl",
         type=Path,
@@ -113,9 +114,8 @@ def main() -> int:
         params: list[Any] = []
         if not args.include_raw_docs:
             query += " AND source_kind <> 'raw_doc' AND doc_type <> 'raw_doc'"
-        if args.language:
-            query += " AND language = ?"
-            params.append(args.language)
+        query += " AND language = ?"
+        params.append(args.language)
         rows = con.execute(query, params).fetchdf().to_dict("records")
     finally:
         con.close()
@@ -154,7 +154,7 @@ def main() -> int:
     manifest = {
         "schema_version": 1,
         "db": str(args.db),
-        "language": args.language or "all",
+        "language": args.language,
         "record_count": len(records),
         "output_jsonl": str(args.output_jsonl),
         "output_jsonl_sha256": text_digest(args.output_jsonl.read_text(encoding="utf-8")),
