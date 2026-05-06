@@ -95,7 +95,11 @@ def main() -> int:
             zip_path.name: {"size_bytes": zip_path.stat().st_size, "sha256": sha256_file(zip_path)},
         },
         "moved_source": bool(args.move_source),
-        "output_dir": str(output_dir),
+        "distribution_contents": [staged_db.name, staged_summary.name, zip_path.name],
+        "notes": [
+            "Public distribution manifest for the prebuilt DuckDB bundle.",
+            "Local build paths are intentionally omitted.",
+        ],
     }
     manifest_path = output_dir / "prebuilt_duckdb_manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")

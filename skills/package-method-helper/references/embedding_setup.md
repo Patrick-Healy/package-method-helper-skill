@@ -10,14 +10,19 @@ Official references:
 - [DuckDB documentation](https://duckdb.org/docs/current/)
 - [DuckDB Python client](https://duckdb.org/docs/stable/clients/python/overview)
 
-This skill supports two embedding paths:
+This skill supports three embedding paths:
 
-1. **Self-embedded chunks**
-   - Build the DuckDB index.
+1. **Published starter chunk bundle**
+   - Download `package_method_helper_starter_embedding_chunks_bundle.zip` from the public Dropbox folder.
+   - It contains the curated top-50 package starter set for `r`, `python`, and `stata`.
+   - Use the included language-bounded JSONL files directly with `scripts/embed_chunks_openai.py` or another embedding pipeline.
+
+2. **Self-exported chunks from the prebuilt DuckDB**
+   - Download the prebuilt DuckDB bundle.
    - Export safe chunk payloads with `scripts/export_embedding_chunks.py`.
    - Create vectors with `scripts/embed_chunks_openai.py` or another embedding pipeline.
 
-2. **Precomputed embeddings**
+3. **Precomputed embeddings**
    - Later, drop published embedding files into `assets/precomputed_embeddings/` using the contract in that folder.
    - Keep the raw chunk JSONL and the embedding vectors versioned separately.
 
@@ -129,8 +134,8 @@ python3 skills/package-method-helper/scripts/embed_chunks_openai.py \
 ```
 
 Recommended order:
-1. build or download the DuckDB
-2. export one language-bounded chunk file
+1. either download the starter chunk bundle or build/download the DuckDB
+2. use one language-bounded chunk file
 3. confirm `OPENAI_API_KEY` is set locally
 4. run the embedding script
 5. keep the output vectors separate from the raw chunk export

@@ -13,6 +13,10 @@ import duckdb
 
 ABSOLUTE_PATH_RE = re.compile(r"/Users/[^\s)]+")
 PATH_HEADER_RE = re.compile(r"^\[[A-Z0-9_]*PATH\]\s+.*$", re.MULTILINE)
+REPRESENTATIVE_EVIDENCE_SECTION_RE = re.compile(
+    r"\nRepresentative Evidence:\n(?:- .*\n)+(?=\n(?:Norm vs Requirement:|Related Documentation Chunks:|$))",
+    re.MULTILINE,
+)
 WHITESPACE_RE = re.compile(r"\s+")
 EMBEDDING_LANGUAGES = ["r", "python", "stata"]
 
@@ -49,6 +53,7 @@ def parse_args() -> argparse.Namespace:
 def scrub_text(text: str) -> str:
     text = ABSOLUTE_PATH_RE.sub("[SCRUBBED_PATH]", text or "")
     text = PATH_HEADER_RE.sub("", text)
+    text = REPRESENTATIVE_EVIDENCE_SECTION_RE.sub("\n", text)
     return text.strip()
 
 
@@ -153,14 +158,15 @@ def main() -> int:
 
     manifest = {
         "schema_version": 1,
-        "db": str(args.db),
+        "db_artifact": Path(args.db).name,
         "language": args.language,
         "record_count": len(records),
-        "output_jsonl": str(args.output_jsonl),
+        "output_jsonl_name": args.output_jsonl.name,
         "output_jsonl_sha256": text_digest(args.output_jsonl.read_text(encoding="utf-8")),
         "notes": [
             "Safe export for external embedding pipelines.",
             "Absolute local paths and PATH headers are scrubbed from the text payload.",
+            "Source-repo evidence sections are removed from empirical-pattern text.",
             "Full raw docs are excluded by default; use --include-raw-docs to export them explicitly.",
         ],
     }

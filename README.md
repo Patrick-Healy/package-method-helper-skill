@@ -22,6 +22,9 @@ Install the whole folder, not only `SKILL.md`.
 
 ## Before you start
 
+Start here if you want the shortest safe path:
+- `docs/safe_setup_guide.md`
+
 ### What is DuckDB?
 
 DuckDB is an in-process analytical SQL database. This skill uses DuckDB as a local searchable index over package manifests, cards, chunks, and raw docs.
@@ -63,30 +66,25 @@ rsync -a /tmp/package-method-helper-skill/skills/package-method-helper/ ~/.claud
 
 Restart the agent session after installation so the skill is discovered.
 
-## Build a local DuckDB index
-
-This repo does not need to publish your corpus. It expects you to point the builder at a local package collection folder.
-
-Example:
-
-```bash
-python3 skills/package-method-helper/scripts/build_package_method_helper_duckdb.py \
-  --collection-root /path/to/package_methods_top50_language_upload_tasks \
-  --comparisons-root /path/to/package_methods_top50_sync_safe/00_comparisons \
-  --output-db work/generated/duckdb/package_method_helper.duckdb
-```
-
 ## Download a prebuilt DuckDB instead
 
-If you do not want to build the index yourself, you can download the published DuckDB bundle from Dropbox.
+If you do not want to build the index yourself, start here.
 
-Recommended long-term public distribution:
+Public manual download:
+- [Dropbox prebuilt bundle folder](https://www.dropbox.com/scl/fo/f4t4tadtekpdkb93ebfst/AJMXiGDN9Uoz0ziOunY24rA?rlkey=sgn0z08ogppazqiu9nl8s8drb&st=gko1xbo1&dl=0)
+
+Download:
+- `package_method_helper.duckdb`
+- `package_method_helper.summary.json`
+
+Place them in:
+- `work/generated/duckdb/`
+
+Recommended long-term public distribution order:
 1. GitHub release asset for `package_method_helper_duckdb_bundle.zip`
 2. another direct binary URL
-3. Dropbox folder link only as manual fallback
+3. Dropbox folder link as manual fallback
 
-Folder link:
-- maintainer-provided Dropbox folder link
 
 Manual flow:
 - open the Dropbox folder
@@ -131,7 +129,55 @@ Publishing details:
 Use the prebuilt database when you only need:
 - verified package query
 - bounded follow-up retrieval
-- embedding export from the curated corpus
+- exportable starter chunks for self-managed embeddings
+
+## Create your own embeddings from the published starter chunks
+
+If you want your own embeddings without rebuilding the private corpus, download the published starter chunk bundle from the same Dropbox folder.
+
+Starter bundle:
+- `package_method_helper_starter_embedding_chunks_bundle.zip`
+
+Starter set scope:
+- the curated top-50 package set for `r`, `python`, and `stata`
+
+Included files:
+- `package_method_helper_r_embedding_chunks.jsonl`
+- `package_method_helper_python_embedding_chunks.jsonl`
+- `package_method_helper_stata_embedding_chunks.jsonl`
+- matching `.manifest.json` files
+
+Current starter set coverage:
+- `r`: `1320` retrieval records
+- `python`: `2184` retrieval records
+- `stata`: `565` retrieval records
+
+This path is for users who want to:
+- keep their own embedding vendor or model choice
+- avoid rebuilding the collection locally
+- embed only one language at a time
+
+Example:
+
+```bash
+python3 skills/package-method-helper/scripts/embed_chunks_openai.py \
+  --input-jsonl work/generated/duckdb/package_method_helper_python_embedding_chunks.jsonl \
+  --output-jsonl work/generated/embeddings/package_method_helper_python_embeddings.jsonl \
+  --model text-embedding-3-small
+```
+
+## Build a local DuckDB index
+
+This repo does not need to publish your corpus. It expects you to point the builder at a local package collection folder.
+
+Example:
+
+```bash
+python3 skills/package-method-helper/scripts/build_package_method_helper_duckdb.py \
+  --collection-root /path/to/package_methods_top50_language_upload_tasks \
+  --comparisons-root /path/to/package_methods_top50_sync_safe/00_comparisons \
+  --output-db work/generated/duckdb/package_method_helper.duckdb
+```
 
 Build locally instead if you need to:
 - ingest new packages or paper layers
