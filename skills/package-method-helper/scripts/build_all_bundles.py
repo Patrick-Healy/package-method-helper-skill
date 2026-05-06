@@ -55,8 +55,10 @@ def main() -> int:
         str(db_path),
     ])
 
-    export_targets: list[tuple[str, Path]] = [("all", bundles_dir / "package_method_helper_all_embedding_chunks.jsonl")]
-    export_targets.extend((lang, bundles_dir / f"package_method_helper_{lang}_embedding_chunks.jsonl") for lang in LANGUAGES)
+    export_targets: list[tuple[str, Path]] = [
+        (lang, bundles_dir / f"package_method_helper_{lang}_embedding_chunks.jsonl")
+        for lang in LANGUAGES
+    ]
 
     for language, output_jsonl in export_targets:
         manifest_path = output_jsonl.with_suffix(output_jsonl.suffix + ".manifest.json")
@@ -71,8 +73,7 @@ def main() -> int:
             "--output-jsonl",
             str(output_jsonl),
         ]
-        if language != "all":
-            cmd.extend(["--language", language])
+        cmd.extend(["--language", language])
         run(cmd)
 
     embedding_targets: list[tuple[str, Path, Path]] = []
